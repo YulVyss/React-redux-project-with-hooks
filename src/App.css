@@ -1,0 +1,86 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 1.2vmin);
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    -webkit-animation: App-logo-float infinite 5s ease;
+            animation: App-logo-float infinite 5s ease;
+  }
+}
+
+.App-header {
+  padding: 50px 0;
+}
+
+.App-link {
+  color: rgb(112, 76, 182);
+}
+
+@-webkit-keyframes App-logo-float {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(30deg);
+  }
+  75% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes App-logo-float {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(30deg);
+  }  
+  75% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.container {
+  flex: 1 1 auto;
+  max-width: no;
+  padding: 0 50px;
+}
+.container__body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
+.photo {
+  position: relative;
+}
+.img {
+  width: 100%;
+}
+.text {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.user__link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+}
