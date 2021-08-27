@@ -13,7 +13,8 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <h1>PhotoCollection</h1>
+          <img src='/img/icons/stack-of-photos.png' className="App-logo" alt="logo" />
+          <h1 className='title'>PhotoCollection</h1>
         </header>
         <main className="main">
           <Switch>

@@ -1,0 +1,20 @@
+.container {
+
+  padding: 0 50px;
+}
+.container__body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
+.likes {
+  background: url(../img/icons/heart.svg) right/ contain no-repeat;
+  font-size: 14px;
+}
+.full__likes {
+  background: url(../img/icons/heart.svg) right/ contain no-repeat;
+}
+.full__likes.active {
+  background: url(../img/icons/heartRed.svg) right/ contain no-repeat;
+}

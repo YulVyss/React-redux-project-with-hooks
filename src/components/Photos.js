@@ -32,11 +32,8 @@ export default function Photos() {
         setPhotos(result.response.results)
         setButton("LOAD MORE")
         dispatch(getPhotos(result.response.results))
-
+        localStorage.setItem('photos', JSON.stringify(result.response.results));
       })
-      .catch(() => {
-        // console.log("something went wrong!");
-      });
   }
 
   if (photosArr.length > 0) {

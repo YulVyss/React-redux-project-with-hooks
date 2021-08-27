@@ -7,7 +7,8 @@ export const unsplash = createApi({
   accessKey: accessKey,
   fetch: nodeFetch,
   redirect_uri: 'http://localhost:3000/auth', // manual, *follow, error
-  response_type: 'code'
+  response_type: 'code',
+  scope: 'public+write_likes+read_photos',
 });
 let req = {
   accessKey: accessKey,
