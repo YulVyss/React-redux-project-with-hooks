@@ -1,8 +1,9 @@
 .container {
-
-  padding: 0 50px;
+  padding: 0 50px 0;
+  min-width: 320px;
 }
 .container__body {
+  padding: 20px 0 ;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 20px;

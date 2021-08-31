@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { unsplash } from './unsplash'
 import Page from './Page'
@@ -13,7 +13,23 @@ export default function Photos() {
   const page = useSelector(selectPage);
   // console.log(page)
   const photosArr = useSelector(selectPhotos);
-  console.log(photosArr)
+  // let localData = localStorage.getItem('photos')
+
+  useEffect(() => {
+    unsplash.search
+      .getPhotos({
+        query: 'all',
+        page: page,
+        perPage: 4,
+        orientation: 'portrait',
+      })
+      .then(result => {
+        setPhotos(result.response.results)
+        setButton("LOAD MORE")
+        dispatch(getPhotos(result.response.results))
+        localStorage.setItem('photos', JSON.stringify(result.response.results));
+      })
+  }, [])
 
 
   let clickHandler = (event) => {
@@ -25,7 +41,7 @@ export default function Photos() {
       .getPhotos({
         query: 'all',
         page: page,
-        perPage: 3,
+        perPage: 4,
         orientation: 'portrait',
       })
       .then(result => {
@@ -35,10 +51,16 @@ export default function Photos() {
         localStorage.setItem('photos', JSON.stringify(result.response.results));
       })
   }
+  const container = useRef()
+  let scrollHandler = () => {
+    console.log(container.pageYOffset)
+  }
 
   if (photosArr.length > 0) {
+    console.log('photosArr')
+
     return (
-      <div className="container" onClick={clickHandler}>
+      <div className="container" ref={container} onClick={clickHandler} onScroll={scrollHandler}>
         <Page photos={photosArr} />
         {/* {photosArr.map((page, index) => <Page key={index} photos={page} />)} */}
         <button className="add">{button}</button>

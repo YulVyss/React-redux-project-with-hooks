@@ -8,7 +8,6 @@ export default function Page({ photos }) {
       {photos.map(photo =>
         <div className="photo" key={photo.id}>
           <p><Link className="link_to_full" to={`/photo/${photo.id}`}>full</Link></p>
-          {/* <p><a className="link" href={`/photo/${photo.id}`} target="_blank">full A</a></p> */}
           <img className="img" src={photo.urls.small} alt={photo.user} />
           <div className="text">
             <p className='likes'>{photo.likes}</p>
@@ -17,6 +16,7 @@ export default function Page({ photos }) {
               target="_blank"
               rel="noreferrer"
             >{photo.user.name}</a>
+            <p>Date: {photo.created_at.substr(0, 10)}</p>
           </div>
 
         </div>
