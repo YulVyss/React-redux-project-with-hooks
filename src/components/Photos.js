@@ -7,13 +7,14 @@ import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 export default function Photos() {
   const [photos, setPhotos] = useState([])
   const code = window.location.search.split('code=')[1];
-  localStorage.setItem('token', code);
+  if (!localStorage.getItem('token')) {
+    localStorage.setItem('token', code);
+  }
   const [button, setButton] = useState('LOAD PHOTOS')
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
   // console.log(page)
   const photosArr = useSelector(selectPhotos);
-  // let localData = localStorage.getItem('photos')
 
   useEffect(() => {
     unsplash.search

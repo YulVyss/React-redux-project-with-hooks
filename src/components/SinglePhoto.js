@@ -1,21 +1,31 @@
 import React, { useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { selectPhotos, selectPage } from '../redux/photoReducer'
-import { unsplash } from './unsplash'
+import { connect, useSelector } from 'react-redux';
+import { selectPhotos } from '../redux/photoReducer'
+import { accessKey } from './unsplash'
 
 function SinglePhoto(params) {
   let { id } = useParams()
+
   let photos = useSelector(selectPhotos)
-  let page = useSelector(selectPage)
+  const access_token = localStorage.getItem('token')
   const [likeBut, setLikeBut] = useState('full__likes')
   let like = useRef()
   let photo = photos.filter(photo => photo.id === id)[0]
-
+  console.log(access_token)
   const handleLikes = () => {
     if (!like.current.classList.contains('active')) {
       setLikeBut('full__likes active')
-      unsplash.photos.likePhoto('R0ddJ4emqLo')
+      let data = {
+        'id': id,
+        "access_token": `${access_token}`,
+        'Authorization': `Bearer ${access_token}`
+      }
+
+      fetch(`https://api.unsplash.com/photos/${id}/like`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      })
         .then(result => result.json())
         .then(result => {
           console.log(result)
@@ -26,7 +36,6 @@ function SinglePhoto(params) {
 
   }
   if (photo) {
-
 
     return (
       <div className="container">
