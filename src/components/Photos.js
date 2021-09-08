@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { unsplash } from './unsplash'
+import Unsplash, { toJson } from 'unsplash-js';
+import { unsplash } from './Authentication'
 import Page from './Page'
 import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 
 export default function Photos() {
   const [photos, setPhotos] = useState([])
-  const code = window.location.search.split('code=')[1];
+  const access_token = window.location.search.split('code=')[1];
   if (!localStorage.getItem('token')) {
-    localStorage.setItem('token', code);
+    localStorage.setItem('token', access_token);
   }
   const [button, setButton] = useState('LOAD PHOTOS')
   const dispatch = useDispatch();
@@ -17,18 +18,16 @@ export default function Photos() {
   const photosArr = useSelector(selectPhotos);
 
   useEffect(() => {
+    // unsplash.auth.setBearerToken(access_token);
+
     unsplash.search
-      .getPhotos({
-        query: 'all',
-        page: page,
-        perPage: 4,
-        orientation: 'portrait',
-      })
+      .photos('all', page, 5, { orientation: "portrait" })
+      .then(toJson)
       .then(result => {
-        setPhotos(result.response.results)
+        setPhotos(result.results)
         setButton("LOAD MORE")
-        dispatch(getPhotos(result.response.results))
-        localStorage.setItem('photos', JSON.stringify(result.response.results));
+        dispatch(getPhotos(result.results))
+        localStorage.setItem('photos', JSON.stringify(result.results));
       })
   }, [])
 
@@ -39,31 +38,30 @@ export default function Photos() {
 
     if (!t.classList.contains('add')) return true
     unsplash.search
-      .getPhotos({
-        query: 'all',
-        page: page,
-        perPage: 4,
-        orientation: 'portrait',
-      })
+      .photos('all', page, 3, { orientation: "portrait" })
+      .then(toJson)
       .then(result => {
-        setPhotos(result.response.results)
+        setPhotos(result.results)
         setButton("LOAD MORE")
-        dispatch(getPhotos(result.response.results))
-        localStorage.setItem('photos', JSON.stringify(result.response.results));
+        dispatch(getPhotos(result.results))
+        localStorage.setItem('photos', JSON.stringify(result.results));
       })
+
   }
   const container = useRef()
-  let scrollHandler = () => {
-    console.log(container.pageYOffset)
-  }
+
 
   if (photosArr.length > 0) {
-    console.log('photosArr')
+    console.log("photosArr")
+    console.log(photosArr)
 
     return (
-      <div className="container" ref={container} onClick={clickHandler} onScroll={scrollHandler}>
-        <Page photos={photosArr} />
-        {/* {photosArr.map((page, index) => <Page key={index} photos={page} />)} */}
+      <div className="container" ref={container} onClick={clickHandler}>
+        <div className="container__body">
+          {/* <Page photo={photosArr} /> */}
+          {photosArr.map((page, index) => <Page key={index} photo={page} />)}
+
+        </div>
         <button className="add">{button}</button>
       </div>
     )

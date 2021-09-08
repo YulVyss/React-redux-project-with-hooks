@@ -1,8 +1,20 @@
 import React, { useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { connect, useSelector } from 'react-redux';
+import Unsplash, { toJson } from 'unsplash-js';
+import { unsplash } from './Authentication'
 import { selectPhotos } from '../redux/photoReducer'
 import { accessKey } from './unsplash'
+let token = localStorage.getItem('token')
+
+const unsplashS = new Unsplash({
+  accessKey: accessKey,
+  callbackUrl: 'http://localhost:3000/photos', // manual, *follow, error
+  response_type: 'code',
+  // scope: 'public',
+  bearerToken: token
+});
+
 
 function SinglePhoto(params) {
   let { id } = useParams()
@@ -16,17 +28,8 @@ function SinglePhoto(params) {
   const handleLikes = () => {
     if (!like.current.classList.contains('active')) {
       setLikeBut('full__likes active')
-      let data = {
-        'id': id,
-        "access_token": `${access_token}`,
-        'Authorization': `Bearer ${access_token}`
-      }
-
-      fetch(`https://api.unsplash.com/photos/${id}/like`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      })
-        .then(result => result.json())
+      unsplashS.photos.likePhoto(id)
+        .then(toJson)
         .then(result => {
           console.log(result)
         })
@@ -43,7 +46,7 @@ function SinglePhoto(params) {
         <div className="full__wrapper">
           <div className="full__photo">
             <button onClick={handleLikes} className={likeBut} ref={like}></button>
-            <img className="img" src={photo.urls.full} alt={photo.user.username} />
+            <img className="full__img" src={photo.urls.full} alt={photo.user.username} />
           </div>
           <div className="full__description">
             <a href={photo.user.links.html}
@@ -54,7 +57,7 @@ function SinglePhoto(params) {
             >{photo.user.name}</a>
             <p>ID: {photo.id}</p>
             <p className='full__date'>Date: <b>{photo.created_at.substr(0, 10)}</b></p>
-            <p className=''>Description: <b>{photo.description}</b></p>
+            <p >Description: <b>{photo.description}</b></p>
             <p>User location: <b>{photo.user.location}</b></p>
             <p>Likes: {photo.likes}</p>
           </div>

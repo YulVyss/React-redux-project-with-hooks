@@ -23,7 +23,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Authentication} />
             <Route exact path="/photos" component={Photos} />
-            <Route exact path="/photo/:id" component={SinglePhoto} />
+            <Route exact path="/photos/:id" component={SinglePhoto} />
             <Route component={Error} />
           </Switch>
         </main>
@@ -34,8 +34,6 @@ function App() {
         </footer>
       </div>
     </Router>
-    //POST /photos/:id/like
-
   );
 }
 
