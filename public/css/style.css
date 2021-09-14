@@ -4,7 +4,7 @@
 }
 
 .likes {
-  background: url(../img/icons/heart.svg) right/ contain no-repeat;
+  background: url(../img/icons/heartWhite.svg) right/ contain no-repeat;
   font-size: 14px;
 }
 .likes.active {

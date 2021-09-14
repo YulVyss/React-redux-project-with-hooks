@@ -65,7 +65,6 @@ export default function Photos() {
     return (
       <div className="container" ref={container} onClick={clickHandler}>
         <div className="container__body">
-          {/* <Page photo={photosArr} /> */}
           {photosArr.map((page, index) => <Page key={index} photo={page} />)}
         </div>
         <button className="add">{button}</button>
