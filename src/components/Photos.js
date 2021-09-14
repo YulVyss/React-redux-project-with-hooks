@@ -6,14 +6,12 @@ import Page from './Page'
 import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 
 export default function Photos() {
-  const [photos, setPhotos] = useState([])
 
   let access_token = window.location.search.split('code=')[1] ? window.location.search.split('code=')[1] : localStorage.getItem('token');
 
   if (!localStorage.getItem('token')) {
     localStorage.setItem('token', access_token);
   }
-  console.log(access_token)
   const [button, setButton] = useState('LOAD PHOTOS')
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
@@ -31,7 +29,6 @@ export default function Photos() {
         .photos('all', page, 10, { orientation: "portrait" })
         .then(toJson)
         .then(result => {
-          setPhotos(result.results)
           setButton("LOAD MORE")
           dispatch(getPhotos(result.results))
           localStorage.setItem('photos', JSON.stringify(result.results));
@@ -51,7 +48,6 @@ export default function Photos() {
       .photos('all', page, 10, { orientation: "portrait" })
       .then(toJson)
       .then(result => {
-        setPhotos(result.results)
         setButton("LOAD MORE")
         dispatch(getPhotos(result.results))
         localStorage.setItem('photos', JSON.stringify(result.results));
