@@ -8,8 +8,18 @@ import Authentication from './components/Authentication';
 import Photos from './components/Photos';
 import SinglePhoto from './components/SinglePhoto';
 import Error from './components/Error';
+import { unsplash } from './components/Authentication'
+import { toJson } from 'unsplash-js';
+
+let access_token = ''
+localStorage.setItem('token', access_token);
 
 function App() {
+  access_token = window.location.search.split('code=')[1] ? window.location.search.split('code=')[1] : localStorage.getItem('token');
+  if (access_token !== '') {
+    localStorage.setItem('token', access_token);
+  }
+
   return (
     <Router>
       <div className="App">

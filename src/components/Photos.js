@@ -5,13 +5,11 @@ import { unsplash } from './Authentication'
 import Page from './Page'
 import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 
+
 export default function Photos() {
 
-  let access_token = window.location.search.split('code=')[1] ? window.location.search.split('code=')[1] : localStorage.getItem('token');
+  let access_token = localStorage.getItem('token')
 
-  if (!localStorage.getItem('token')) {
-    localStorage.setItem('token', access_token);
-  }
   const [button, setButton] = useState('LOAD PHOTOS')
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
@@ -19,12 +17,13 @@ export default function Photos() {
 
   useEffect(() => {
     if (access_token) {
-      unsplash.auth.userAuthentication(access_token)
-        .then(toJson)
-        .then(json => {
-          unsplash.auth.setBearerToken(json.access_token);
-        });
-
+      console.log('useeffect token')
+      // unsplash.auth.userAuthentication(access_token)
+      //   .then(toJson)
+      //   .then(json => {
+      //     unsplash.auth.setBearerToken(json.access_token);
+      //   });
+      console.log(access_token)
       unsplash.search
         .photos('all', page, 10, { orientation: "portrait" })
         .then(toJson)

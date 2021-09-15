@@ -5,8 +5,6 @@ import { toJson } from 'unsplash-js'
 import { unsplash } from './Authentication'
 import { selectPhotos, likePhoto, unLikePhoto } from '../redux/photoReducer'
 
-let token = localStorage.getItem('token')
-
 
 function SinglePhoto(params) {
   let { id } = useParams()
@@ -24,26 +22,42 @@ function SinglePhoto(params) {
     }
   }, [])
 
-  const handleLikes = (id, token) => {
+  const handleLikes = (id, access_token) => {
     if (!like.current.classList.contains('active')) {
       setLikeBut('full__likes active')
 
       if (access_token) {
-        unsplash.photos.likePhoto(id)
+        unsplash.auth.userAuthentication(access_token)
           .then(toJson)
-          .then(result => {
-            console.log(result)
-            dispatch(likePhoto(id))
+          .then(json => {
+            unsplash.auth.setBearerToken(json.access_token);
+          })
+          .then(res => {
+            unsplash.photos.likePhoto(id)
+              .then(toJson)
+              .then(result => {
+                console.log(result)
+                dispatch(likePhoto(id))
+              })
           })
       }
     } else {
       setLikeBut('full__likes')
-      unsplash.photos.unlikePhoto(id)
+      unsplash.auth.userAuthentication(access_token)
         .then(toJson)
-        .then(result => {
-          console.log(result)
-          dispatch(unLikePhoto(id))
+        .then(json => {
+          unsplash.auth.setBearerToken(json.access_token);
         })
+        .then(res => {
+          unsplash.photos.unlikePhoto(id)
+            .then(toJson)
+            .then(result => {
+              console.log(result)
+              dispatch(unLikePhoto(id))
+            })
+        })
+
+
     }
   }
   if (photo) {
@@ -53,7 +67,7 @@ function SinglePhoto(params) {
         <Link to="/photos" className="link-to-back">&#706;&#706; Photos</Link>
         <div className="full__wrapper">
           <div className="full__photo">
-            <button onClick={() => handleLikes(photo.id, token)} className={likeBut} ref={like}></button>
+            <button onClick={() => handleLikes(photo.id, access_token)} className={likeBut} ref={like}></button>
             <img className="full__img" src={photo.urls.full} alt={photo.user.username} />
           </div>
           <div className="full__description">

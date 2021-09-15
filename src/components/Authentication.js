@@ -20,7 +20,7 @@ export const unsplash = new Unsplash({
 const authenticationUrl = unsplash.auth.getAuthenticationUrl([
   "public",
   "read_user",
-  "write_likes"
+  "write_likes",
 ])
 
 
