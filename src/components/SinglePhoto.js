@@ -24,39 +24,34 @@ function SinglePhoto(params) {
 
   const handleLikes = (id, access_token) => {
     if (!like.current.classList.contains('active')) {
-      setLikeBut('full__likes active')
+
 
       if (access_token) {
-        unsplash.auth.userAuthentication(access_token)
-          .then(toJson)
-          .then(json => {
-            unsplash.auth.setBearerToken(json.access_token);
-          })
-          .then(res => {
-            unsplash.photos.likePhoto(id)
-              .then(toJson)
-              .then(result => {
-                console.log(result)
-                dispatch(likePhoto(id))
-              })
-          })
-      }
-    } else {
-      setLikeBut('full__likes')
-      unsplash.auth.userAuthentication(access_token)
-        .then(toJson)
-        .then(json => {
-          unsplash.auth.setBearerToken(json.access_token);
-        })
-        .then(res => {
-          unsplash.photos.unlikePhoto(id)
+        try {
+          unsplash.photos.likePhoto(id)
             .then(toJson)
             .then(result => {
               console.log(result)
-              dispatch(unLikePhoto(id))
+              dispatch(likePhoto(id))
+              setLikeBut('full__likes active')
             })
-        })
+        } catch (err) {
+          alert(err)
+        }
 
+      }
+    } else {
+      setLikeBut('full__likes')
+      try {
+        unsplash.photos.unlikePhoto(id)
+          .then(toJson)
+          .then(result => {
+            console.log(result)
+            dispatch(unLikePhoto(id))
+          })
+      } catch (err) {
+        alert(err)
+      }
 
     }
   }

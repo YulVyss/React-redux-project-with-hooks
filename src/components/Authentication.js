@@ -5,8 +5,7 @@ import Unsplash, { toJson } from 'unsplash-js';
 global.fetch = fetch
 
 const accessKey = '5d139d49dd0559b26a263cc4ebc346f2005a4a761ee32e6890475b167c8d6bbc';
-// const Unsplash = require('unsplash-js').default;
-// const toJson = require('unsplash-js').toJson;
+
 
 export const unsplash = new Unsplash({
   accessKey: accessKey,

@@ -8,22 +8,15 @@ import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 
 export default function Photos() {
 
-  let access_token = localStorage.getItem('token')
-
   const [button, setButton] = useState('LOAD PHOTOS')
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
   const photosArr = useSelector(selectPhotos);
 
+
   useEffect(() => {
-    if (access_token) {
-      console.log('useeffect token')
-      // unsplash.auth.userAuthentication(access_token)
-      //   .then(toJson)
-      //   .then(json => {
-      //     unsplash.auth.setBearerToken(json.access_token);
-      //   });
-      console.log(access_token)
+    if (localStorage.getItem('token') !== '') {
+
       unsplash.search
         .photos('all', page, 10, { orientation: "portrait" })
         .then(toJson)
@@ -43,14 +36,19 @@ export default function Photos() {
     let t = event.target;
 
     if (!t.classList.contains('add')) return true
-    unsplash.search
-      .photos('all', page, 10, { orientation: "portrait" })
-      .then(toJson)
-      .then(result => {
-        setButton("LOAD MORE")
-        dispatch(getPhotos(result.results))
-        localStorage.setItem('photos', JSON.stringify(result.results));
-      })
+    try {
+      unsplash.search
+        .photos('all', page, 10, { orientation: "portrait" })
+        .then(toJson)
+        .then(result => {
+          setButton("LOAD MORE")
+          dispatch(getPhotos(result.results))
+          localStorage.setItem('photos', JSON.stringify(result.results));
+        })
+    } catch (err) {
+      alert(err)
+    }
+
   }
 
   const container = useRef()

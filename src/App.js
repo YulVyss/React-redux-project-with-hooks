@@ -4,21 +4,51 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react'
 import Authentication from './components/Authentication';
 import Photos from './components/Photos';
 import SinglePhoto from './components/SinglePhoto';
 import Error from './components/Error';
 import { unsplash } from './components/Authentication'
 import { toJson } from 'unsplash-js';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectPhotos, selectToken, setToken } from './redux/photoReducer'
 
 let access_token = ''
-localStorage.setItem('token', access_token);
+
 
 function App() {
-  access_token = window.location.search.split('code=')[1] ? window.location.search.split('code=')[1] : localStorage.getItem('token');
-  if (access_token !== '') {
-    localStorage.setItem('token', access_token);
-  }
+  const dispatch = useDispatch();
+  const token = useSelector(selectToken);
+
+  useEffect(() => {
+
+    if (window.location.search.split('code=')[1]) {
+      access_token = window.location.search.split('code=')[1]
+      localStorage.setItem('token', access_token);
+      console.log('access_token')
+      unsplash.auth.userAuthentication(access_token)
+        .then(toJson)
+        .then(json => {
+          unsplash.auth.setBearerToken(json.access_token);
+          dispatch(setToken(access_token))
+        })
+    } else if (token === '' && localStorage.getItem('token') && !window.location.search.split('code=')[1]) {
+      access_token = localStorage.getItem('token')
+      console.log('localStorage ' + localStorage.getItem('token'))
+
+      // unsplash.auth.userAuthentication(access_token)
+      //   .then(toJson)
+      //   .then(json => {
+      //     unsplash.auth.setBearerToken(json.access_token);
+      //     dispatch(setToken(access_token))
+      //   })
+
+    }
+  }, [])
+
+
+
 
   return (
     <Router>
