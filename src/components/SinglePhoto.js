@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { toJson } from 'unsplash-js'
-import { unsplash } from './Authentication'
+import { unsplash } from '../App'
 import { selectPhotos, likePhoto, unLikePhoto } from '../redux/photoReducer'
 
 
@@ -24,7 +24,6 @@ function SinglePhoto(params) {
 
   const handleLikes = (id, access_token) => {
     if (!like.current.classList.contains('active')) {
-
 
       if (access_token) {
         try {
@@ -52,7 +51,6 @@ function SinglePhoto(params) {
       } catch (err) {
         alert(err)
       }
-
     }
   }
   if (photo) {

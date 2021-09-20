@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { toJson } from 'unsplash-js';
-import { unsplash } from './Authentication'
+import { unsplash } from '../App'
 import Page from './Page'
 import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
 
@@ -13,20 +13,17 @@ export default function Photos() {
   const page = useSelector(selectPage);
   const photosArr = useSelector(selectPhotos);
 
-
   useEffect(() => {
     if (localStorage.getItem('token') !== '') {
-
+      console.log('photos')
       unsplash.search
         .photos('all', page, 10, { orientation: "portrait" })
         .then(toJson)
         .then(result => {
           setButton("LOAD MORE")
           dispatch(getPhotos(result.results))
-          localStorage.setItem('photos', JSON.stringify(result.results));
+          // localStorage.setItem('photos', JSON.stringify(result.results));
         })
-    } else {
-      return window.location.href = "http://localhost:3000"
     }
   }, [])
 
@@ -69,5 +66,6 @@ export default function Photos() {
         <button className="add">{button}</button>
       </div>
     )
+
   }
 }

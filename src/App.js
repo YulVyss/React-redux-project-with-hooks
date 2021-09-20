@@ -4,54 +4,58 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import React, { useState, useEffect, useRef } from 'react'
+import Unsplash, { toJson } from 'unsplash-js';
 import Authentication from './components/Authentication';
 import Photos from './components/Photos';
 import SinglePhoto from './components/SinglePhoto';
 import Error from './components/Error';
-import { unsplash } from './components/Authentication'
-import { toJson } from 'unsplash-js';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectPhotos, selectToken, setToken } from './redux/photoReducer'
+import { useDispatch } from 'react-redux';
 
-let access_token = ''
+// let access_token = ''
+global.fetch = fetch
+
+const accessKey = '5d139d49dd0559b26a263cc4ebc346f2005a4a761ee32e6890475b167c8d6bbc';
+
+
+export const unsplash = new Unsplash({
+  accessKey: accessKey,
+  secret: "0417212b15c877ff348acba7c70d083fb805d8bd4bb99d3dfd195397a7a0e94d",
+  callbackUrl: 'http://localhost:3000/photos', // manual, *follow, error
+  response_type: 'code',
+});
+
+export const authenticationUrl = unsplash.auth.getAuthenticationUrl([
+  "public",
+  "read_user",
+  "write_likes",
+])
 
 
 function App() {
   const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  let access_token = window.location.search.split('code=')[1]
+  if (window.location.search.split('code=')[1]) {
 
-  useEffect(() => {
-
-    if (window.location.search.split('code=')[1]) {
-      access_token = window.location.search.split('code=')[1]
-      localStorage.setItem('token', access_token);
-      console.log('access_token')
+    try {
       unsplash.auth.userAuthentication(access_token)
         .then(toJson)
         .then(json => {
           unsplash.auth.setBearerToken(json.access_token);
-          dispatch(setToken(access_token))
+          console.log('token ' + json.access_token)
+          localStorage.setItem('token', access_token);
         })
-    } else if (token === '' && localStorage.getItem('token') && !window.location.search.split('code=')[1]) {
-      access_token = localStorage.getItem('token')
-      console.log('localStorage ' + localStorage.getItem('token'))
-
-      // unsplash.auth.userAuthentication(access_token)
-      //   .then(toJson)
-      //   .then(json => {
-      //     unsplash.auth.setBearerToken(json.access_token);
-      //     dispatch(setToken(access_token))
-      //   })
-
+    } catch (err) {
+      alert(err)
     }
-  }, [])
 
 
+
+  }
 
 
   return (
     <Router>
+      {console.log('render')}
       <div className="App">
         <header className="App-header">
           <div className="container header__body">
