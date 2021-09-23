@@ -261,12 +261,13 @@ h1 {
   padding-right: 30px;
 }
 .add {
+  display: block;
   padding: 10px 20px;
   font-size: 22px;
   border-radius: 12px;
   background-color: #565656;
   color: #fff;
-  margin: 20px 0;
+  margin: 0 auto 20px;
 }
 .link-to-back {
   font-size: 20px;

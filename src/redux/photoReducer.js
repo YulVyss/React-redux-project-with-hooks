@@ -5,8 +5,12 @@ export const photoSlice = createSlice({
   initialState: {
     photos: [],
     page: 1,
+    token: ''
   },
   reducers: {
+    setToken: (state, token) => {
+      state.token = token.payload
+    },
     getPhotos: (state, data) => {
       state.photos = state.photos.concat(data.payload)
       state.page++
@@ -33,9 +37,10 @@ export const photoSlice = createSlice({
     }
   }
 })
-export const { getPhotos, likePhoto, unLikePhoto } = photoSlice.actions;
+export const { getPhotos, likePhoto, unLikePhoto, setToken } = photoSlice.actions;
 export const selectPage = state => state.photos.page;
 export const selectPhotos = state => state.photos.photos;
+export const selectToken = state => state.photos.token;
 
 
 export default photoSlice.reducer;

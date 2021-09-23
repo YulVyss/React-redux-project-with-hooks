@@ -3,14 +3,14 @@ import { useParams, Link } from 'react-router-dom'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { toJson } from 'unsplash-js'
 import { unsplash } from '../App'
-import { selectPhotos, likePhoto, unLikePhoto } from '../redux/photoReducer'
+import { selectPhotos, likePhoto, unLikePhoto, selectToken } from '../redux/photoReducer'
 
 
 function SinglePhoto(params) {
   let { id } = useParams()
   const dispatch = useDispatch()
   let photos = useSelector(selectPhotos)
-  const access_token = localStorage.getItem('token')
+  const access_token = useSelector(selectToken)
   const [likeBut, setLikeBut] = useState('full__likes')
   let like = useRef()
   let photo = photos.filter(photo => photo.id === id)[0]
@@ -35,9 +35,11 @@ function SinglePhoto(params) {
               setLikeBut('full__likes active')
             })
         } catch (err) {
-          alert(err)
+          alert("To like photo You need to log in!")
         }
 
+      } else {
+        window.location.href = 'http://localhost:3000'
       }
     } else {
       setLikeBut('full__likes')
@@ -66,7 +68,10 @@ function SinglePhoto(params) {
           <div className="full__description">
             <p><a href={photo.user.links.html}
               className="full__user-name"
-              style={{ fontSize: 24 }, { fontWeight: 700 }}
+              style={
+                { fontSize: 24 },
+                { fontWeight: 700 }
+              }
               target="_blank"
               rel="noreferrer"
             >{photo.user.name}</a></p>

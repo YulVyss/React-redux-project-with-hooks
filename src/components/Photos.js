@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { toJson } from 'unsplash-js';
 import { unsplash } from '../App'
 import Page from './Page'
 import { getPhotos, selectPage, selectPhotos } from '../redux/photoReducer'
+
 
 
 export default function Photos() {
@@ -12,20 +13,6 @@ export default function Photos() {
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
   const photosArr = useSelector(selectPhotos);
-
-  useEffect(() => {
-    if (localStorage.getItem('token') !== '') {
-      console.log('photos')
-      unsplash.search
-        .photos('all', page, 10, { orientation: "portrait" })
-        .then(toJson)
-        .then(result => {
-          setButton("LOAD MORE")
-          dispatch(getPhotos(result.results))
-          // localStorage.setItem('photos', JSON.stringify(result.results));
-        })
-    }
-  }, [])
 
 
   let clickHandler = (event) => {

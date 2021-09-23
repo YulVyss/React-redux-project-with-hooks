@@ -1,17 +1,18 @@
+import React, { useEffect } from 'react'
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
+import { useDispatch } from 'react-redux'
 import Unsplash, { toJson } from 'unsplash-js';
 import Authentication from './components/Authentication';
 import Photos from './components/Photos';
 import SinglePhoto from './components/SinglePhoto';
 import Error from './components/Error';
-import { useDispatch } from 'react-redux';
+import { getPhotos, setToken } from './redux/photoReducer'
 
-// let access_token = ''
 global.fetch = fetch
 
 const accessKey = '5d139d49dd0559b26a263cc4ebc346f2005a4a761ee32e6890475b167c8d6bbc';
@@ -32,30 +33,37 @@ export const authenticationUrl = unsplash.auth.getAuthenticationUrl([
 
 
 function App() {
-  const dispatch = useDispatch();
   let access_token = window.location.search.split('code=')[1]
-  if (window.location.search.split('code=')[1]) {
+  const dispatch = useDispatch();
 
-    try {
-      unsplash.auth.userAuthentication(access_token)
-        .then(toJson)
-        .then(json => {
-          unsplash.auth.setBearerToken(json.access_token);
-          console.log('token ' + json.access_token)
-          localStorage.setItem('token', access_token);
-        })
-    } catch (err) {
-      alert(err)
+  useEffect(() => {
+    if (access_token) {
+
+      try {
+        unsplash.auth.userAuthentication(access_token)
+          .then(toJson)
+          .then(json => {
+            dispatch(setToken(access_token))
+            unsplash.auth.setBearerToken(json.access_token);
+            localStorage.setItem('token', access_token);
+            unsplash.search
+              .photos('all', 1, 10, { orientation: "portrait" })
+              .then(toJson)
+              .then(result => {
+
+                dispatch(getPhotos(result.results))
+              })
+          })
+      } catch (err) {
+        alert(err)
+      }
     }
 
-
-
-  }
+  }, [access_token])
 
 
   return (
     <Router>
-      {console.log('render')}
       <div className="App">
         <header className="App-header">
           <div className="container header__body">
