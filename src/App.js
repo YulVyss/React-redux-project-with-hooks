@@ -59,7 +59,7 @@ function App() {
       }
     }
 
-  }, [access_token])
+  }, [access_token, dispatch])
 
 
   return (

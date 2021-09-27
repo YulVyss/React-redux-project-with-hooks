@@ -20,7 +20,7 @@ function SinglePhoto(params) {
     } else {
       setLikeBut('full__likes')
     }
-  }, [])
+  }, [photo])
 
   const handleLikes = (id, access_token) => {
     if (!like.current.classList.contains('active')) {
@@ -69,8 +69,10 @@ function SinglePhoto(params) {
             <p><a href={photo.user.links.html}
               className="full__user-name"
               style={
-                { fontSize: 24 },
-                { fontWeight: 700 }
+                {
+                  fontSize: 24,
+                  fontWeight: 700
+                }
               }
               target="_blank"
               rel="noreferrer"
@@ -83,7 +85,7 @@ function SinglePhoto(params) {
           </div>
         </div>
 
-      </div>
+      </div >
     )
   } else {
     return window.location.href = "http://localhost:3000/Error"
